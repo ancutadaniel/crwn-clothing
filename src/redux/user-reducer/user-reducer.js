@@ -1,7 +1,8 @@
-import { SET_CURRENT_USER } from './userConstants';
+import { SET_CURRENT_USER, USER_CLICK } from './userConstants';
 
 const initialState = {
   currentUser: null,
+  text: '',
 };
 
 const userReducer = (state = initialState, actions) => {
@@ -11,7 +12,11 @@ const userReducer = (state = initialState, actions) => {
         ...state,
         currentUser: actions.payload,
       };
-
+    case USER_CLICK:
+      return {
+        ...state,
+        text: actions.payload,
+      };
     default:
       return state;
   }

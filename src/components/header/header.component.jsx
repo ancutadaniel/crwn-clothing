@@ -4,13 +4,25 @@ import { connect } from 'react-redux';
 import { auth } from '../../firebase/firebase.utils';
 import { ReactComponent as Logo } from '../../assets/crown.svg';
 
+import CartIcon from '../cart-icon/cart-icon.component';
+import CartDropdown from '../cart-dropdown/cart-dropdown.component';
+
+import { userClick } from '../../redux/user-reducer/user-actions';
+
 import './header.styles.scss';
 
 const mapStateToProps = (state) => ({
   user: state.root_user_reducer.currentUser,
+  showCart: state.root_cart_reducer.showCart,
 });
 
-const Header = ({ user }) => {
+const mapDispatchToProps = (dispatch) => {
+  return {
+    localFunction: (text) => dispatch(userClick(text)),
+  };
+};
+
+const Header = ({ user, showCart }) => {
   return (
     <div className='header'>
       <Link className='logo-container' to='/'>
@@ -33,9 +45,11 @@ const Header = ({ user }) => {
             Sign In
           </Link>
         )}
+        <CartIcon />
       </div>
+      {showCart && <CartDropdown />}
     </div>
   );
 };
 
-export default connect(mapStateToProps)(Header);
+export default connect(mapStateToProps, mapDispatchToProps)(Header);
