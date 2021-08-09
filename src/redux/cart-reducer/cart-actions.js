@@ -1,6 +1,10 @@
-import { SHOW_CART } from './cart-constants';
+import { ADD_ITEM, TOGGLE_CART } from './cart-constants';
 
-export const showCartAction = (bool) => ({
-  type: SHOW_CART,
-  payload: bool,
+export const toggleCartAction = () => ({
+  type: TOGGLE_CART,
+});
+
+export const addItem = (item) => ({
+  type: ADD_ITEM,
+  payload: item,
 });

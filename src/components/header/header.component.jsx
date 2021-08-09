@@ -9,11 +9,15 @@ import CartDropdown from '../cart-dropdown/cart-dropdown.component';
 
 import { userClick } from '../../redux/user-reducer/user-actions';
 
+import { createStructuredSelector } from 'reselect';
+import { selectCartToggle } from '../../redux/cart-reducer/cart.selectors';
+import { selectCurrentUser } from '../../redux/user-reducer/user.selector';
+
 import './header.styles.scss';
 
-const mapStateToProps = (state) => ({
-  user: state.root_user_reducer.currentUser,
-  showCart: state.root_cart_reducer.showCart,
+const mapStateToProps = createStructuredSelector({
+  user: selectCurrentUser,
+  showCart: selectCartToggle,
 });
 
 const mapDispatchToProps = (dispatch) => {
@@ -22,7 +26,7 @@ const mapDispatchToProps = (dispatch) => {
   };
 };
 
-const Header = ({ user, showCart }) => {
+const Header = ({ user, showCart, localFunction }) => {
   return (
     <div className='header'>
       <Link className='logo-container' to='/'>
