@@ -1,4 +1,9 @@
-import { ADD_ITEM, TOGGLE_CART } from './cart-constants';
+import {
+  ADD_ITEM,
+  TOGGLE_CART,
+  REMOVE_ITEM_CHECKOUT,
+  REMOVE_ITEM_FROM_LIST,
+} from './cart-constants';
 
 export const toggleCartAction = () => ({
   type: TOGGLE_CART,
@@ -6,5 +11,15 @@ export const toggleCartAction = () => ({
 
 export const addItem = (item) => ({
   type: ADD_ITEM,
+  payload: item,
+});
+
+export const removeItem = (item) => ({
+  type: REMOVE_ITEM_FROM_LIST,
+  payload: item,
+});
+
+export const removeItemCheckout = (item) => ({
+  type: REMOVE_ITEM_CHECKOUT,
   payload: item,
 });
