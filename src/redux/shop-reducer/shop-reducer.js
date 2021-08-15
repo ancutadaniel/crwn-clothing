@@ -1,13 +1,16 @@
-import SHOP_DATA from '../../pages/shop/shop.data';
+import { GET_SHOP_DATA } from './shop-constants';
 
 const initialState = {
-  collections: SHOP_DATA,
+  collections: {},
 };
 
 export const shopReducer = (state = initialState, actions) => {
   switch (actions.type) {
-    case 1:
-      break;
+    case GET_SHOP_DATA:
+      return {
+        ...state,
+        collections: actions.payload,
+      };
 
     default:
       return state;

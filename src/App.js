@@ -7,9 +7,10 @@ import Shop from './pages/shop/shop.component';
 import Checkout from './pages/checkout/checkout.component';
 import SignInSignUpPage from './pages/sign-in-sign-up/sign-in-sign-up.component';
 import { auth, createUserProfileDocument } from './firebase/firebase.utils';
-import { selectCurrentUser } from './redux/user-reducer/user.selector';
 
 //redux actions
+import { selectCurrentUser } from './redux/user-reducer/user.selector';
+
 import { setCurrentUser } from './redux/user-reducer/user-actions';
 import { createStructuredSelector } from 'reselect';
 
@@ -34,6 +35,10 @@ class App extends React.Component {
         setCurrentUserRedux(user);
       }
     });
+    // addCollectionAndDocuments(
+    //   'collections',
+    //   collectionsArray.map(({ title, items }) => ({ title, items }))
+    // );
   }
 
   componentWillUnmount() {

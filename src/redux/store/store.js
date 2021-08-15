@@ -3,6 +3,7 @@ import { persistStore } from 'redux-persist';
 import logger from 'redux-logger';
 import rootReducer from '../root-reducer';
 import { composeWithDevTools } from 'redux-devtools-extension';
+// connect to dev tools browser
 
 const middlewares = [];
 
