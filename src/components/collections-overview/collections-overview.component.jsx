@@ -9,17 +9,11 @@ import { CollectionsContainer } from './collections.styles';
 
 const CollectionsOverview = ({ collections }) => {
   return (
-    <>
-      {collections.length ? (
-        <CollectionsContainer>
-          {collections.map(({ id, ...collectionsProps }) => {
-            return <PreviewCollections key={id} {...collectionsProps} />;
-          })}
-        </CollectionsContainer>
-      ) : (
-        <div>Loading...</div>
-      )}{' '}
-    </>
+    <CollectionsContainer>
+      {collections.map(({ id, ...collectionsProps }) => {
+        return <PreviewCollections key={id} {...collectionsProps} />;
+      })}
+    </CollectionsContainer>
   );
 };
 

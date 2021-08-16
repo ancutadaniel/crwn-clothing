@@ -6,41 +6,55 @@ import { ShopPageContainer } from './shop.styles';
 
 import CollectionsOverview from '../../components/collections-overview/collections-overview.component';
 import CollectionPage from '../collection/collection.component';
+import Spinner from '../../components/spinner/spinner.component';
 
+import { fetchShopDataAsync } from '../../redux/shop-reducer/shop-actions';
 import {
-  firestore,
-  convertCollectionsSnapshotToMap,
-} from '../../firebase/firebase.utils';
-import { getShopData } from '../../redux/shop-reducer/shop-actions';
+  collectionFetch,
+  collectionIsLoading,
+} from '../../redux/shop-reducer/shop.selector';
+import { createStructuredSelector } from 'reselect';
+
+// HOC use for component - wrapped
+const CollectionsOverviewSpinner = Spinner(CollectionsOverview);
+const CollectionsPageSpinner = Spinner(CollectionPage);
 
 class Shop extends React.Component {
-  unsubscribeFromSnapShot = null;
-
   componentDidMount() {
-    const { getShopDataFirebase } = this.props;
-    const collectionRef = firestore.collection('collections');
-
-    collectionRef.onSnapshot(async (snapshot) => {
-      const collectionsMap = convertCollectionsSnapshotToMap(snapshot);
-
-      getShopDataFirebase(collectionsMap);
-    });
+    const { fetchData } = this.props;
+    fetchData();
   }
 
   render() {
-    const { match } = this.props;
+    const { match, isPending, isDataLoaded } = this.props;
 
     return (
       <ShopPageContainer>
-        <Route exact path={`${match.path}`} component={CollectionsOverview} />
-        <Route path={`${match.path}/:id`} component={CollectionPage} />
+        <Route
+          exact
+          path={`${match.path}`}
+          render={(props) => (
+            <CollectionsOverviewSpinner isLoading={isPending} {...props} />
+          )}
+        />
+        <Route
+          path={`${match.path}/:id`}
+          render={(props) => (
+            <CollectionsPageSpinner isLoading={!isDataLoaded} {...props} />
+          )}
+        />
       </ShopPageContainer>
     );
   }
 }
 
-const mapDispatchToProps = (dispatch) => ({
-  getShopDataFirebase: (data) => dispatch(getShopData(data)),
+const mapStateToProps = createStructuredSelector({
+  isPending: collectionFetch,
+  isDataLoaded: collectionIsLoading,
 });
 
-export default connect(null, mapDispatchToProps)(Shop);
+const mapDispatchToProps = (dispatch) => ({
+  fetchData: () => dispatch(fetchShopDataAsync()),
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(Shop);
