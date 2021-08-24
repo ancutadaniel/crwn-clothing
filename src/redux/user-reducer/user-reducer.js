@@ -1,22 +1,37 @@
-import { SET_CURRENT_USER, USER_CLICK } from './userConstants';
+import {
+  SIGN_IN_FULLFILED,
+  SIGN_IN_REJECTED,
+  SIGN_OUT_FULLFILED,
+  SIGN_OUT_REJECTED,
+} from './user-constants';
 
 const initialState = {
   currentUser: null,
-  text: '',
+  error: '',
 };
 
 const userReducer = (state = initialState, actions) => {
   switch (actions.type) {
-    case SET_CURRENT_USER:
+    case SIGN_IN_FULLFILED:
       return {
         ...state,
         currentUser: actions.payload,
+        error: null,
       };
-    case USER_CLICK:
+
+    case SIGN_OUT_FULLFILED:
       return {
         ...state,
-        text: actions.payload,
+        currentUser: null,
+        error: null,
       };
+    case SIGN_IN_REJECTED:
+    case SIGN_OUT_REJECTED:
+      return {
+        ...state,
+        error: actions.payload,
+      };
+
     default:
       return state;
   }

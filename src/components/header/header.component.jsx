@@ -1,12 +1,9 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { auth } from '../../firebase/firebase.utils';
 import { ReactComponent as Logo } from '../../assets/crown.svg';
 
 import CartIcon from '../cart-icon/cart-icon.component';
 import CartDropdown from '../cart-dropdown/cart-dropdown.component';
-
-import { userClick } from '../../redux/user-reducer/user-actions';
 
 import { createStructuredSelector } from 'reselect';
 import { selectCartToggle } from '../../redux/cart-reducer/cart.selectors';
@@ -15,22 +12,13 @@ import { selectCurrentUser } from '../../redux/user-reducer/user.selector';
 import {
   HeaderContainer,
   LogoContainer,
-  OptionsContainer,
   OptionLink,
+  OptionsContainer,
 } from './header.styles';
 
-const mapStateToProps = createStructuredSelector({
-  user: selectCurrentUser,
-  showCart: selectCartToggle,
-});
+import { signOutPending } from '../../redux/user-reducer/user-actions';
 
-const mapDispatchToProps = (dispatch) => {
-  return {
-    localFunction: (text) => dispatch(userClick(text)),
-  };
-};
-
-const Header = ({ user, showCart, localFunction }) => {
+const Header = ({ user, showCart, signOut }) => {
   return (
     <HeaderContainer>
       <LogoContainer to='/'>
@@ -40,7 +28,7 @@ const Header = ({ user, showCart, localFunction }) => {
         <OptionLink to='/shop'>Shop</OptionLink>
         <OptionLink to='/contact'>Contact</OptionLink>
         {user ? (
-          <OptionLink as='div' onClick={() => auth.signOut()}>
+          <OptionLink as='div' onClick={signOut}>
             {' '}
             Sign Out{' '}
           </OptionLink>
@@ -53,5 +41,14 @@ const Header = ({ user, showCart, localFunction }) => {
     </HeaderContainer>
   );
 };
+
+const mapStateToProps = createStructuredSelector({
+  user: selectCurrentUser,
+  showCart: selectCartToggle,
+});
+
+const mapDispatchToProps = (dispatch) => ({
+  signOut: () => dispatch(signOutPending()),
+});
 
 export default connect(mapStateToProps, mapDispatchToProps)(Header);

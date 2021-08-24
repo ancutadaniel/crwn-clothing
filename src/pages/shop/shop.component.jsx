@@ -1,23 +1,10 @@
 import React from 'react';
 import { Route } from 'react-router-dom';
 import { connect } from 'react-redux';
-
 import { ShopPageContainer } from './shop.styles';
-
-import CollectionsOverview from '../../components/collections-overview/collections-overview.component';
-import CollectionPage from '../collection/collection.component';
-import Spinner from '../../components/spinner/spinner.component';
-
-import { fetchShopDataAsync } from '../../redux/shop-reducer/shop-actions';
-import {
-  collectionFetch,
-  collectionIsLoading,
-} from '../../redux/shop-reducer/shop.selector';
-import { createStructuredSelector } from 'reselect';
-
-// HOC use for component - wrapped
-const CollectionsOverviewSpinner = Spinner(CollectionsOverview);
-const CollectionsPageSpinner = Spinner(CollectionPage);
+import CollectionOverviewContainer from '../../components/collections-overview/container-overview.container';
+import CollectionPageContainer from '../../pages/collection/collection.component';
+import { pendingShopData } from '../../redux/shop-reducer/shop-actions';
 
 class Shop extends React.Component {
   componentDidMount() {
@@ -26,35 +13,22 @@ class Shop extends React.Component {
   }
 
   render() {
-    const { match, isPending, isDataLoaded } = this.props;
-
+    const { match } = this.props;
     return (
       <ShopPageContainer>
         <Route
           exact
           path={`${match.path}`}
-          render={(props) => (
-            <CollectionsOverviewSpinner isLoading={isPending} {...props} />
-          )}
+          component={CollectionOverviewContainer}
         />
-        <Route
-          path={`${match.path}/:id`}
-          render={(props) => (
-            <CollectionsPageSpinner isLoading={!isDataLoaded} {...props} />
-          )}
-        />
+        <Route path={`${match.path}/:id`} component={CollectionPageContainer} />
       </ShopPageContainer>
     );
   }
 }
 
-const mapStateToProps = createStructuredSelector({
-  isPending: collectionFetch,
-  isDataLoaded: collectionIsLoading,
-});
-
 const mapDispatchToProps = (dispatch) => ({
-  fetchData: () => dispatch(fetchShopDataAsync()),
+  fetchData: () => dispatch(pendingShopData()),
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(Shop);
+export default connect(null, mapDispatchToProps)(Shop);

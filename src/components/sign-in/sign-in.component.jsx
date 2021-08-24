@@ -1,7 +1,13 @@
 import React from 'react';
 import FormInput from '../form-input/form-input.component';
 import CustomButton from '../custom-button/custom-button.component';
-import { auth, signInWithGoogle } from '../../firebase/firebase.utils';
+import { connect } from 'react-redux';
+
+//redux
+import {
+  googleSignInPending,
+  emailSignInPending,
+} from '../../redux/user-reducer/user-actions';
 
 import {
   SignInContainer,
@@ -26,18 +32,13 @@ class SignIn extends React.Component {
 
   handleSubmit = async (e) => {
     e.preventDefault();
-
+    const { emailSignInPending } = this.props;
     const { email, password } = this.state;
-
-    try {
-      await auth.signInWithEmailAndPassword(email, password);
-      this.setState({ email: '', password: '' });
-    } catch (error) {
-      console.error(error);
-    }
+    emailSignInPending(email, password);
   };
 
   render() {
+    const { googleSignInPending } = this.props;
     return (
       <SignInContainer>
         <SignInTitle> I already have account </SignInTitle>
@@ -64,7 +65,7 @@ class SignIn extends React.Component {
             <CustomButton
               type='button'
               isGoogleSignIn
-              onClick={signInWithGoogle}
+              onClick={googleSignInPending}
             >
               Sign In With Google{' '}
             </CustomButton>
@@ -75,4 +76,10 @@ class SignIn extends React.Component {
   }
 }
 
-export default SignIn;
+const mapDispatchToProps = (dispatch) => ({
+  googleSignInPending: () => dispatch(googleSignInPending()),
+  emailSignInPending: (email, password) =>
+    dispatch(emailSignInPending({ email, password })),
+});
+
+export default connect(null, mapDispatchToProps)(SignIn);

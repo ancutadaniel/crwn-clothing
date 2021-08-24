@@ -23,6 +23,7 @@ export const rejectedShopData = (error) => ({
   payload: error,
 });
 
+// thunk approach -> action code async
 export const fetchShopDataAsync = () => {
   return (dispatch) => {
     const collectionRef = firestore.collection('collections');
