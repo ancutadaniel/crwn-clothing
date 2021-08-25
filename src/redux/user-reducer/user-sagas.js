@@ -5,6 +5,8 @@ import {
   GOOGLE_SIGN_IN_PENDING,
   CHECK_USER_SESSION,
   SIGN_OUT_PENDING,
+  SIGN_UP_PENDING,
+  SIGN_UP_FULLFILED,
 } from './user-constants';
 
 import {
@@ -12,6 +14,8 @@ import {
   signInRejected,
   signOutFullfiled,
   signOutRejected,
+  signUpFullfiled,
+  signUpRejected,
 } from './user-actions';
 
 import {
@@ -21,9 +25,13 @@ import {
   googleProvider,
 } from '../../firebase/firebase.utils';
 
-export function* getSnapshotFromUserAuth(userAuth) {
+export function* getSnapshotFromUserAuth(userAuth, additionalData) {
   try {
-    const userRef = yield call(createUserProfileDocument, userAuth);
+    const userRef = yield call(
+      createUserProfileDocument,
+      userAuth,
+      additionalData
+    );
     const userSnapShot = yield userRef.get();
     yield put(signInFullFiled({ id: userSnapShot.id, ...userSnapShot.data() }));
   } catch (error) {
@@ -68,6 +76,19 @@ export function* onSignOut() {
   }
 }
 
+export function* onSignUp({ payload: { displayName, email, password } }) {
+  try {
+    const { user } = yield auth.createUserWithEmailAndPassword(email, password);
+    yield put(signUpFullfiled({ user, additionalData: { displayName } }));
+  } catch (error) {
+    yield put(signUpRejected(error.message));
+  }
+}
+
+export function* signInAfterSignUp({ payload: { user, additionalData } }) {
+  yield getSnapshotFromUserAuth(user, additionalData);
+}
+
 export function* pendingGoogleSignInSagas() {
   yield takeLatest(GOOGLE_SIGN_IN_PENDING, onGoogleSignInPending);
 }
@@ -84,11 +105,21 @@ export function* signOutPendingSagas() {
   yield takeLatest(SIGN_OUT_PENDING, onSignOut);
 }
 
+export function* signUpPendingSagas() {
+  yield takeLatest(SIGN_UP_PENDING, onSignUp);
+}
+
+export function* signUpFullfiledSagas() {
+  yield takeLatest(SIGN_UP_FULLFILED, signInAfterSignUp);
+}
+
 export function* userSagas() {
   yield all([
     call(pendingGoogleSignInSagas),
     call(pendingEmailSignInSagas),
     call(checkUserSessionSagas),
     call(signOutPendingSagas),
+    call(signUpPendingSagas),
+    call(signUpFullfiledSagas),
   ]);
 }

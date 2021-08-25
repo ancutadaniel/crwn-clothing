@@ -1,4 +1,4 @@
-import { takeLatest, call, put } from '@redux-saga/core/effects';
+import { takeLatest, call, put, all } from '@redux-saga/core/effects';
 /* takeEvery listen to every action that we pass like PENDING_SHOP_DATA
    put is similar as dispatch(thunk)
    put is the sagas effect for create actions
@@ -43,4 +43,8 @@ export function* fetchShopDataAsync() {
 export function* pendingShopDataSagas() {
   //listen to PENDING_SHOP_DATA action
   yield takeLatest(PENDING_SHOP_DATA, fetchShopDataAsync);
+}
+
+export function* shopsSagas() {
+  yield all([call(pendingShopDataSagas)]);
 }

@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
 import CheckoutItem from '../../components/checkout-item/checkout-item.component';
 import StripeCheckoutButton from '../../components/stripe-button/stripe-button.component';
+import { clearCart } from '../../redux/cart-reducer/cart-actions';
 
 import {
   selectCartItems,
@@ -17,7 +18,7 @@ import {
   WarningContainer,
 } from './checkout.styles';
 
-const Checkout = ({ cartItems, total }) => (
+const Checkout = ({ cartItems, total, clearCart }) => (
   <CheckoutPageContainer>
     <CheckoutHeaderContariner>
       <HeaderBlockContainer>
@@ -60,4 +61,8 @@ const mapStateToProps = createStructuredSelector({
   total: selectCartTotal,
 });
 
-export default connect(mapStateToProps)(Checkout);
+const mapDispatchToProps = (dispatch) => ({
+  clearCart: () => dispatch(clearCart()),
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(Checkout);

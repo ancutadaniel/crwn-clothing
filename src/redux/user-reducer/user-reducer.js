@@ -3,6 +3,8 @@ import {
   SIGN_IN_REJECTED,
   SIGN_OUT_FULLFILED,
   SIGN_OUT_REJECTED,
+  SIGN_UP_FULLFILED,
+  SIGN_UP_REJECTED,
 } from './user-constants';
 
 const initialState = {
@@ -27,6 +29,7 @@ const userReducer = (state = initialState, actions) => {
       };
     case SIGN_IN_REJECTED:
     case SIGN_OUT_REJECTED:
+    case SIGN_UP_REJECTED:
       return {
         ...state,
         error: actions.payload,
