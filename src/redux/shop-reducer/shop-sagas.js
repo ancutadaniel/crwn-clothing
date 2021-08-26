@@ -16,8 +16,6 @@ import {
 // sagas approach
 // async generator function trigger by the action bellow "PENDING_SHOP_DATA"
 export function* fetchShopDataAsync() {
-  yield console.log('pending...');
-
   try {
     const collectionRef = firestore.collection('collections');
 

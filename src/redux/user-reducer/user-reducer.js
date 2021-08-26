@@ -3,7 +3,6 @@ import {
   SIGN_IN_REJECTED,
   SIGN_OUT_FULLFILED,
   SIGN_OUT_REJECTED,
-  SIGN_UP_FULLFILED,
   SIGN_UP_REJECTED,
 } from './user-constants';
 
