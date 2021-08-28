@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import FormInput from '../form-input/form-input.component';
 import CustomButton from '../custom-button/custom-button.component';
-import { connect } from 'react-redux';
+import { useDispatch } from 'react-redux';
 
 //redux
 import {
@@ -15,16 +15,21 @@ import {
   ButtonBarContainer,
 } from './sign-in.styles';
 
-const SignIn = ({ emailSignInPending, googleSignInPending }) => {
+const SignIn = () => {
   const [userCredentials, setUserCredentials] = useState({
     email: '',
     password: '',
   });
   const { email, password } = userCredentials;
 
+  const dispatch = useDispatch();
+  const googleSignIn = () => {
+    dispatch(googleSignInPending());
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
-    emailSignInPending(email, password);
+    dispatch(emailSignInPending({ email, password }));
   };
 
   const handleChange = (e) => {
@@ -55,11 +60,7 @@ const SignIn = ({ emailSignInPending, googleSignInPending }) => {
         />
         <ButtonBarContainer>
           <CustomButton type='submit'>Sign In</CustomButton>
-          <CustomButton
-            type='button'
-            isGoogleSignIn
-            onClick={googleSignInPending}
-          >
+          <CustomButton type='button' isGoogleSignIn onClick={googleSignIn}>
             Sign In With Google{' '}
           </CustomButton>
         </ButtonBarContainer>
@@ -68,10 +69,4 @@ const SignIn = ({ emailSignInPending, googleSignInPending }) => {
   );
 };
 
-const mapDispatchToProps = (dispatch) => ({
-  googleSignInPending: () => dispatch(googleSignInPending()),
-  emailSignInPending: (email, password) =>
-    dispatch(emailSignInPending({ email, password })),
-});
-
-export default connect(null, mapDispatchToProps)(SignIn);
+export default SignIn;

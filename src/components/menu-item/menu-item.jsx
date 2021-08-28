@@ -1,5 +1,5 @@
 import React from 'react';
-import { withRouter } from 'react-router-dom';
+import { useHistory, useRouteMatch } from 'react-router-dom';
 
 import {
   BackgroundImageContainer,
@@ -9,7 +9,9 @@ import {
   SubTitleContainer,
 } from './menu-item.styles';
 
-const MenuItem = ({ title, imageUrl, size, history, linkUrl, match }) => {
+const MenuItem = ({ title, imageUrl, size, linkUrl }) => {
+  const history = useHistory();
+  const match = useRouteMatch();
   return (
     <MenuItemContainer
       size={size}
@@ -27,4 +29,4 @@ const MenuItem = ({ title, imageUrl, size, history, linkUrl, match }) => {
   );
 };
 
-export default withRouter(MenuItem); //give as access to location history match
+export default MenuItem; // withRouter give as access to location history match

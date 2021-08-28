@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { Switch, Route, Redirect } from 'react-router-dom';
-import { connect } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import Header from './components/header/header.component';
 import HomePage from './pages/homepage/homepage.component';
 import Shop from './pages/shop/shop.component';
@@ -9,15 +9,21 @@ import SignInSignUpPage from './pages/sign-in-sign-up/sign-in-sign-up.component'
 
 //redux sagas actions
 import { selectCurrentUser } from './redux/user-reducer/user.selector';
-import { createStructuredSelector } from 'reselect';
 import { checkUserSession } from './redux/user-reducer/user-actions';
 
 import './App.css';
 
-const App = ({ checkUserSession, user }) => {
+const App = () => {
+  // first approach without selector
+  // const user = useSelector((state) => state.root_user_reducer.currentUser);
+  // second approach with selector
+  const userSelector = useSelector(selectCurrentUser);
+
+  const dispatch = useDispatch();
+
   useEffect(() => {
-    checkUserSession();
-  }, [checkUserSession]);
+    dispatch(checkUserSession());
+  }, [dispatch]);
 
   return (
     <div className='App'>
@@ -28,7 +34,9 @@ const App = ({ checkUserSession, user }) => {
         <Route
           exact
           path='/signin'
-          render={() => (user ? <Redirect to='/' /> : <SignInSignUpPage />)}
+          render={() =>
+            userSelector ? <Redirect to='/' /> : <SignInSignUpPage />
+          }
         />
         <Route exact path='/checkout' component={Checkout} />
       </Switch>
@@ -36,12 +44,4 @@ const App = ({ checkUserSession, user }) => {
   );
 };
 
-const mapStateToProps = createStructuredSelector({
-  user: selectCurrentUser,
-});
-
-const mapDispatchToProps = (dispatch) => ({
-  checkUserSession: () => dispatch(checkUserSession()),
-});
-
-export default connect(mapStateToProps, mapDispatchToProps)(App);
+export default App;

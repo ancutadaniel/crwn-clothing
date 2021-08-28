@@ -1,5 +1,5 @@
 import React from 'react';
-import { connect } from 'react-redux';
+import { useDispatch } from 'react-redux';
 
 import {
   addItem,
@@ -15,12 +15,9 @@ import {
   RemoveButtonContainer,
 } from './checkout.styles';
 
-const CheckoutItem = ({
-  cartItem,
-  removeItemList,
-  addItemToList,
-  removeItemFromChecklist,
-}) => {
+const CheckoutItem = ({ cartItem }) => {
+  const dispatch = useDispatch();
+
   const { imageUrl, name, quantity, price } = cartItem;
   return (
     <CheckoutItemContainer>
@@ -31,27 +28,21 @@ const CheckoutItem = ({
       <QuantityContainer>
         <div
           className='arrow'
-          onClick={() => removeItemFromChecklist(cartItem)}
+          onClick={() => dispatch(removeItemCheckout(cartItem))}
         >
           &#10094;
         </div>
         <span>{quantity}</span>
-        <div className='arrow' onClick={() => addItemToList(cartItem)}>
+        <div className='arrow' onClick={() => dispatch(addItem(cartItem))}>
           &#10095;
         </div>
       </QuantityContainer>
       <TextContainer>{price}</TextContainer>
-      <RemoveButtonContainer onClick={() => removeItemList(cartItem)}>
+      <RemoveButtonContainer onClick={() => dispatch(removeItem(cartItem))}>
         &#10005;
       </RemoveButtonContainer>
     </CheckoutItemContainer>
   );
 };
 
-const mapDispatchToProps = (dispatch) => ({
-  addItemToList: (item) => dispatch(addItem(item)),
-  removeItemList: (item) => dispatch(removeItem(item)),
-  removeItemFromChecklist: (item) => dispatch(removeItemCheckout(item)),
-});
-
-export default connect(null, mapDispatchToProps)(CheckoutItem);
+export default CheckoutItem;

@@ -1,5 +1,5 @@
 import React from 'react';
-import { withRouter } from 'react-router-dom';
+import { useHistory, useRouteMatch } from 'react-router-dom';
 
 import CollectionItem from '../collection-item/collection-item.component';
 
@@ -9,7 +9,10 @@ import {
   PreviewCollectionItems,
 } from './preview-collection.styles';
 
-const PreviewCollections = ({ title, items, history, match, routeName }) => {
+const PreviewCollections = ({ title, items, routeName }) => {
+  const history = useHistory();
+  const match = useRouteMatch();
+
   return (
     <PreviewCollectionContainer>
       <PreviewCollectionTitle
@@ -28,4 +31,4 @@ const PreviewCollections = ({ title, items, history, match, routeName }) => {
   );
 };
 
-export default withRouter(PreviewCollections);
+export default PreviewCollections;
